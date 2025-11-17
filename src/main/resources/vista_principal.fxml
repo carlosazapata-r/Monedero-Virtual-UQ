@@ -52,52 +52,82 @@
 
 
     <center>
-        <VBox spacing="10"
-              style="-fx-padding: 10;">
+        <VBox spacing="12" style="-fx-padding: 15;">
+            <!-- SECCIÓN: INFORMACIÓN DEL CLIENTE -->
+            <TitledPane text="Información del cliente" expanded="true">
+                <content>
+                    <HBox spacing="20" style="-fx-padding: 8 0 8 0;">
+                        <HBox spacing="5">
+                            <Label text="Saldo:"
+                                   style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+                            <Label fx:id="lblSaldo"
+                                   text="0.0"
+                                   style="-fx-font-size: 16px; -fx-text-fill: #2c3e50;"/>
+                        </HBox>
 
-            <HBox spacing="10">
-                <Label text="Monto:"
-                       style="-fx-font-size: 13px;"/>
-                <TextField fx:id="txtMonto"
-                           promptText="Ingrese monto"
-                           style="-fx-pref-width: 120; -fx-background-radius: 4; -fx-border-radius: 4; -fx-border-color: #4a90e2;"/>
+                        <HBox spacing="5">
+                            <Label text="Puntos:"
+                                   style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+                            <Label fx:id="lblPuntos" text="0"/>
+                        </HBox>
 
-                <Button text="Depositar" onAction="#onDepositar"
-                        style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-background-radius: 4;"/>
-                <Button text="Retirar" onAction="#onRetirar"
-                        style="-fx-background-color: #e67e22; -fx-text-fill: white; -fx-background-radius: 4;"/>
-                <Button text="Transferir" onAction="#onTransferir"
-                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-background-radius: 4;"/>
-            </HBox>
+                        <HBox spacing="5">
+                            <Label text="Rango:"
+                                   style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+                            <Label fx:id="lblRango" text="BRONCE"/>
+                        </HBox>
+                    </HBox>
+                </content>
+            </TitledPane>
 
-            <HBox spacing="20">
-                <Label text="Saldo:"
-                       style="-fx-font-weight: bold;"/>
-                <Label fx:id="lblSaldo" text="0.0"/>
+            <!-- SECCIÓN: OPERACIONES -->
+            <TitledPane text="Operaciones sobre el monedero" expanded="true">
+                <content>
+                    <VBox spacing="8" style="-fx-padding: 8 0 8 0;">
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="Monto:"
+                                   style="-fx-font-size: 13px;"/>
+                            <TextField fx:id="txtMonto"
+                                       promptText="Ingrese monto"
+                                       style="-fx-pref-width: 140; -fx-background-radius: 4; -fx-border-radius: 4; -fx-border-color: #4a90e2;"/>
 
-                <Label text="Puntos:"
-                       style="-fx-font-weight: bold;"/>
-                <Label fx:id="lblPuntos" text="0"/>
+                            <Button text="Depositar"
+                                    onAction="#onDepositar"
+                                    style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-background-radius: 4;"/>
+                            <Button text="Retirar"
+                                    onAction="#onRetirar"
+                                    style="-fx-background-color: #e67e22; -fx-text-fill: white; -fx-background-radius: 4;"/>
+                            <Button text="Transferir"
+                                    onAction="#onTransferir"
+                                    style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-background-radius: 4;"/>
+                        </HBox>
 
-                <Label text="Rango:"
-                       style="-fx-font-weight: bold;"/>
-                <Label fx:id="lblRango" text="BRONCE"/>
+                        <HBox spacing="10">
+                            <Button text="Canjear 100 pts"
+                                    onAction="#onCanjear100"
+                                    style="-fx-background-radius: 4;"/>
+                            <Button text="Análisis de gastos"
+                                    onAction="#onVerAnalisis"
+                                    style="-fx-background-radius: 4;"/>
+                            <Button text="Ordenar historial"
+                                    onAction="#onOrdenarHistorial"
+                                    style="-fx-background-radius: 4;"/>
+                        </HBox>
+                    </VBox>
+                </content>
+            </TitledPane>
 
-                <Button text="Canjear 100 pts" onAction="#onCanjear100"
-                        style="-fx-background-radius: 4;"/>
-                <Button text="Análisis de gastos" onAction="#onVerAnalisis"
-                        style="-fx-background-radius: 4;"/>
-                <Button text="Ordenar historial" onAction="#onOrdenarHistorial"
-                        style="-fx-background-radius: 4;"/>
-            </HBox>
-
-            <Label text="Historial de transacciones:"
-                   style="-fx-font-size: 13px;"/>
-
-            <TextArea fx:id="txtHistorial"
-                      prefRowCount="15"
-                      wrapText="true"
-                      style="-fx-background-radius: 4; -fx-border-radius: 4; -fx-border-color: #cccccc;"/>
+            <!-- SECCIÓN: HISTORIAL -->
+            <TitledPane text="Historial de transacciones" expanded="true">
+                <content>
+                    <VBox spacing="5" style="-fx-padding: 8 0 0 0;">
+                        <TextArea fx:id="txtHistorial"
+                                  prefRowCount="16"
+                                  wrapText="true"
+                                  style="-fx-background-radius: 4; -fx-border-radius: 4; -fx-border-color: #cccccc;"/>
+                    </VBox>
+                </content>
+            </TitledPane>
         </VBox>
     </center>
 </BorderPane>
