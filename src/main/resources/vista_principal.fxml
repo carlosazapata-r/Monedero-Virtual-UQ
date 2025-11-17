@@ -21,6 +21,10 @@
             <ComboBox fx:id="comboMonederos"
                       onAction="#onMonederoSeleccionado"
                       prefWidth="250"/>
+
+            <Separator orientation="VERTICAL"/>
+
+            <Button text="Cerrar sesión" onAction="#onLogout"/>
         </ToolBar>
     </top>
 
@@ -49,7 +53,9 @@
 
                 <Button text="Canjear 100 pts" onAction="#onCanjear100"/>
                 <Button text="Análisis de gastos" onAction="#onVerAnalisis"/>
+                <Button text="Ordenar historial" onAction="#onOrdenarHistorial"/>
             </HBox>
+
 
             <Label text="Historial de transacciones:"/>
             <TextArea fx:id="txtHistorial"

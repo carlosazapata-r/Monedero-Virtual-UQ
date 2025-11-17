@@ -13,7 +13,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
+import com.monedero.controller.PrincipalController;
 import java.util.UUID;
 
 public class LoginController {
@@ -82,6 +82,7 @@ public class LoginController {
             PrincipalController principalController = loader.getController();
             principalController.setSistema(sistema);
             principalController.seleccionarCliente(clienteActual);
+            principalController.setStage(stage);
 
             stage.setTitle("Monedero Virtual - Cliente: " + clienteActual.getNombre());
             stage.setScene(scene);

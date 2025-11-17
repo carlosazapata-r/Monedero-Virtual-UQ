@@ -1,5 +1,6 @@
 package com.monedero.controller;
 
+import javafx.stage.Stage;
 import com.monedero.service.OrdenadorTransacciones;
 import com.monedero.model.Cliente;
 import com.monedero.model.RangoCliente;
@@ -11,6 +12,11 @@ import com.monedero.service.SistemaMonedero;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import com.monedero.App;
+import com.monedero.controller.LoginController;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+
 
 public class PrincipalController {
 
@@ -279,5 +285,31 @@ public class PrincipalController {
         }
         txtHistorial.setText(sb.toString());
     }
+
+    private Stage stage;
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    @FXML
+    private void onLogout() {
+        try {
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("/login.fxml"));
+            Scene scene = new Scene(loader.load(), 400, 250);
+
+            // Volvemos a inicializar el LoginController con el mismo sistema y stage
+            LoginController loginController = loader.getController();
+            loginController.init(sistema, stage);
+
+            stage.setTitle("Login - Monedero Virtual");
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            mostrarAlerta("Error", "No se pudo volver al login: " + e.getMessage());
+        }
+    }
+
+
 
 }
