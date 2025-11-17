@@ -6,73 +6,98 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.monedero.controller.PrincipalController">
+            fx:controller="com.monedero.controller.PrincipalController"
+            style="-fx-background-color: #f5f6fa;">
 
     <top>
-        <ToolBar>
+        <ToolBar style="-fx-background-color: #dbe4f0; -fx-padding: 6;">
             <!-- ORIGEN -->
-            <Label text="Cliente origen:"/>
+            <Label text="Cliente origen:"
+                   style="-fx-font-size: 12px;"/>
             <ComboBox fx:id="comboClientes"
                       onAction="#onClienteSeleccionado"
-                      prefWidth="180"/>
+                      prefWidth="160"
+                      style="-fx-background-radius: 4;"/>
 
-            <Label text="Monedero origen:"/>
+            <Label text="Monedero origen:"
+                   style="-fx-font-size: 12px;"/>
             <ComboBox fx:id="comboMonederos"
                       onAction="#onMonederoSeleccionado"
-                      prefWidth="200"/>
+                      prefWidth="180"
+                      style="-fx-background-radius: 4;"/>
 
             <Separator orientation="VERTICAL"/>
 
             <!-- DESTINO -->
-            <Label text="Cliente destino:"/>
+            <Label text="Cliente destino:"
+                   style="-fx-font-size: 12px;"/>
             <ComboBox fx:id="comboClientesDestino"
                       onAction="#onClienteDestinoSeleccionado"
-                      prefWidth="180"/>
+                      prefWidth="160"
+                      style="-fx-background-radius: 4;"/>
 
-            <Label text="Monedero destino:"/>
+            <Label text="Monedero destino:"
+                   style="-fx-font-size: 12px;"/>
             <ComboBox fx:id="comboMonederosDestino"
-                      prefWidth="200"/>
+                      prefWidth="180"
+                      style="-fx-background-radius: 4;"/>
 
             <Separator orientation="VERTICAL"/>
 
-            <Button text="Cerrar sesión" onAction="#onLogout"/>
+            <Button text="Cerrar sesión"
+                    onAction="#onLogout"
+                    style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 4;"/>
         </ToolBar>
     </top>
 
 
     <center>
-        <VBox spacing="10">
-            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+        <VBox spacing="10"
+              style="-fx-padding: 10;">
 
             <HBox spacing="10">
-                <Label text="Monto:"/>
-                <TextField fx:id="txtMonto" promptText="Ingrese monto"/>
+                <Label text="Monto:"
+                       style="-fx-font-size: 13px;"/>
+                <TextField fx:id="txtMonto"
+                           promptText="Ingrese monto"
+                           style="-fx-pref-width: 120; -fx-background-radius: 4; -fx-border-radius: 4; -fx-border-color: #4a90e2;"/>
 
-                <Button text="Depositar" onAction="#onDepositar"/>
-                <Button text="Retirar" onAction="#onRetirar"/>
-                <Button text="Transferir" onAction="#onTransferir"/>
+                <Button text="Depositar" onAction="#onDepositar"
+                        style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-background-radius: 4;"/>
+                <Button text="Retirar" onAction="#onRetirar"
+                        style="-fx-background-color: #e67e22; -fx-text-fill: white; -fx-background-radius: 4;"/>
+                <Button text="Transferir" onAction="#onTransferir"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-background-radius: 4;"/>
             </HBox>
 
             <HBox spacing="20">
-                <Label text="Saldo:"/>
+                <Label text="Saldo:"
+                       style="-fx-font-weight: bold;"/>
                 <Label fx:id="lblSaldo" text="0.0"/>
 
-                <Label text="Puntos:"/>
+                <Label text="Puntos:"
+                       style="-fx-font-weight: bold;"/>
                 <Label fx:id="lblPuntos" text="0"/>
 
-                <Label text="Rango:"/>
+                <Label text="Rango:"
+                       style="-fx-font-weight: bold;"/>
                 <Label fx:id="lblRango" text="BRONCE"/>
 
-                <Button text="Canjear 100 pts" onAction="#onCanjear100"/>
-                <Button text="Análisis de gastos" onAction="#onVerAnalisis"/>
-                <Button text="Ordenar historial" onAction="#onOrdenarHistorial"/>
+                <Button text="Canjear 100 pts" onAction="#onCanjear100"
+                        style="-fx-background-radius: 4;"/>
+                <Button text="Análisis de gastos" onAction="#onVerAnalisis"
+                        style="-fx-background-radius: 4;"/>
+                <Button text="Ordenar historial" onAction="#onOrdenarHistorial"
+                        style="-fx-background-radius: 4;"/>
             </HBox>
 
+            <Label text="Historial de transacciones:"
+                   style="-fx-font-size: 13px;"/>
 
-            <Label text="Historial de transacciones:"/>
             <TextArea fx:id="txtHistorial"
                       prefRowCount="15"
-                      wrapText="true"/>
+                      wrapText="true"
+                      style="-fx-background-radius: 4; -fx-border-radius: 4; -fx-border-color: #cccccc;"/>
         </VBox>
     </center>
 </BorderPane>
