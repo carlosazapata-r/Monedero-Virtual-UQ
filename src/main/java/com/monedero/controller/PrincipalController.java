@@ -41,6 +41,13 @@ public class PrincipalController {
     @FXML
     private TextArea txtHistorial;
 
+    @FXML
+    private ComboBox<Cliente> comboClientesDestino;
+
+    @FXML
+    private ComboBox<Monedero> comboMonederosDestino;
+
+
     private SistemaMonedero sistema;
 
 
@@ -50,6 +57,11 @@ public class PrincipalController {
         this.sistema = sistema;
         if (comboClientes != null) {
             comboClientes.setItems(
+                    FXCollections.observableArrayList(sistema.getClientes())
+            );
+        }
+        if (comboClientesDestino != null) {
+            comboClientesDestino.setItems(
                     FXCollections.observableArrayList(sistema.getClientes())
             );
         }
@@ -148,28 +160,24 @@ public class PrincipalController {
     @FXML
     private void onTransferir() {
         try {
-            Cliente c = comboClientes.getValue();
-            Monedero origen = comboMonederos.getValue();
+            Cliente clienteOrigen = comboClientes.getValue();
+            Monedero monederoOrigen = comboMonederos.getValue();
 
-            if (c == null || origen == null) {
-                mostrarAlerta("Operación inválida", "Seleccione un cliente y un monedero origen.");
+            Cliente clienteDestino = comboClientesDestino.getValue();
+            Monedero monederoDestino = comboMonederosDestino.getValue();
+
+            if (clienteOrigen == null || monederoOrigen == null) {
+                mostrarAlerta("Transferencia", "Seleccione cliente y monedero ORIGEN.");
                 return;
             }
 
-            if (c.getMonederos().size() < 2) {
-                mostrarAlerta("Transferencia",
-                        "El cliente debe tener al menos dos monederos para transferir.");
+            if (clienteDestino == null || monederoDestino == null) {
+                mostrarAlerta("Transferencia", "Seleccione cliente y monedero DESTINO.");
                 return;
             }
 
-            // monedero destino: el otro monedero del mismo cliente
-            Monedero destino = c.getMonederos().stream()
-                    .filter(m -> !m.equals(origen))
-                    .findFirst()
-                    .orElse(null);
-
-            if (destino == null) {
-                mostrarAlerta("Transferencia", "No se encontró monedero destino.");
+            if (clienteOrigen == clienteDestino && monederoOrigen == monederoDestino) {
+                mostrarAlerta("Transferencia", "El origen y el destino no pueden ser el mismo.");
                 return;
             }
 
@@ -179,8 +187,14 @@ public class PrincipalController {
                 return;
             }
 
-            sistema.realizarTransferencia(c, origen, destino, monto);
-            actualizarMonedero(c, origen);
+            sistema.realizarTransferencia(
+                    clienteOrigen, monederoOrigen,
+                    clienteDestino, monederoDestino,
+                    monto
+            );
+
+            actualizarMonedero(clienteOrigen, monederoOrigen);
+            txtMonto.clear();
         } catch (NumberFormatException e) {
             mostrarAlerta("Monto inválido", "Ingrese un número válido.");
         } catch (Exception e) {
@@ -307,6 +321,18 @@ public class PrincipalController {
             stage.show();
         } catch (Exception e) {
             mostrarAlerta("Error", "No se pudo volver al login: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void onClienteDestinoSeleccionado() {
+        Cliente c = comboClientesDestino.getValue();
+        if (c != null) {
+            comboMonederosDestino.setItems(
+                    FXCollections.observableArrayList(c.getMonederos())
+            );
+        } else {
+            comboMonederosDestino.getItems().clear();
         }
     }
 

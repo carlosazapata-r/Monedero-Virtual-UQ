@@ -6,6 +6,7 @@ import com.monedero.model.transaccion.Deposito;
 import com.monedero.model.transaccion.Retiro;
 import com.monedero.model.transaccion.Transferencia;
 import com.monedero.notificacion.Notificador;
+import com.monedero.service.GestorPuntos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +68,22 @@ public class SistemaMonedero {
                 .filter(c -> c.getNombre().equals(nombre))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public void realizarTransferencia(Cliente clienteOrigen,
+                                      Monedero monederoOrigen,
+                                      Cliente clienteDestino,
+                                      Monedero monederoDestino,
+                                      double monto) throws Exception {
+
+        Transferencia t = new Transferencia(monto, monederoOrigen, monederoDestino);
+        t.ejecutar();
+
+        // Aplicamos puntos al cliente que envía
+        GestorPuntos.aplicarPuntos(clienteOrigen, t);
+
+        // Verificamos saldo bajo en el monedero origen
+        verificarSaldoBajo(clienteOrigen, monederoOrigen);
     }
 
 }

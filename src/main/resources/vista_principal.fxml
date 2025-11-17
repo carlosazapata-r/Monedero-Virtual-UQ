@@ -10,23 +10,35 @@
 
     <top>
         <ToolBar>
-            <Label text="Cliente:"/>
+            <!-- ORIGEN -->
+            <Label text="Cliente origen:"/>
             <ComboBox fx:id="comboClientes"
                       onAction="#onClienteSeleccionado"
+                      prefWidth="180"/>
+
+            <Label text="Monedero origen:"/>
+            <ComboBox fx:id="comboMonederos"
+                      onAction="#onMonederoSeleccionado"
                       prefWidth="200"/>
 
             <Separator orientation="VERTICAL"/>
 
-            <Label text="Monedero:"/>
-            <ComboBox fx:id="comboMonederos"
-                      onAction="#onMonederoSeleccionado"
-                      prefWidth="250"/>
+            <!-- DESTINO -->
+            <Label text="Cliente destino:"/>
+            <ComboBox fx:id="comboClientesDestino"
+                      onAction="#onClienteDestinoSeleccionado"
+                      prefWidth="180"/>
+
+            <Label text="Monedero destino:"/>
+            <ComboBox fx:id="comboMonederosDestino"
+                      prefWidth="200"/>
 
             <Separator orientation="VERTICAL"/>
 
             <Button text="Cerrar sesión" onAction="#onLogout"/>
         </ToolBar>
     </top>
+
 
     <center>
         <VBox spacing="10">
