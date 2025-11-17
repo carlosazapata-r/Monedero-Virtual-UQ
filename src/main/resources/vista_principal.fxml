@@ -13,41 +13,27 @@
     <top>
         <ToolBar style="-fx-background-color: #dbe4f0; -fx-padding: 6;">
             <!-- ORIGEN -->
-            <Label text="Cliente origen:"
-                   style="-fx-font-size: 12px;"/>
+            <Label text="Cliente origen:"/>
             <ComboBox fx:id="comboClientes"
                       onAction="#onClienteSeleccionado"
-                      prefWidth="160"
-                      style="-fx-background-radius: 4;"/>
+                      prefWidth="150"/>
 
-            <Label text="Monedero origen:"
-                   style="-fx-font-size: 12px;"/>
+            <Label text="Monedero origen:"/>
             <ComboBox fx:id="comboMonederos"
                       onAction="#onMonederoSeleccionado"
-                      prefWidth="180"
-                      style="-fx-background-radius: 4;"/>
+                      prefWidth="170"/>
 
             <Separator orientation="VERTICAL"/>
 
             <!-- DESTINO -->
-            <Label text="Cliente destino:"
-                   style="-fx-font-size: 12px;"/>
+            <Label text="Cliente destino:"/>
             <ComboBox fx:id="comboClientesDestino"
                       onAction="#onClienteDestinoSeleccionado"
-                      prefWidth="160"
-                      style="-fx-background-radius: 4;"/>
+                      prefWidth="150"/>
 
-            <Label text="Monedero destino:"
-                   style="-fx-font-size: 12px;"/>
+            <Label text="Monedero destino:"/>
             <ComboBox fx:id="comboMonederosDestino"
-                      prefWidth="180"
-                      style="-fx-background-radius: 4;"/>
-
-            <Separator orientation="VERTICAL"/>
-
-            <Button text="Cerrar sesión"
-                    onAction="#onLogout"
-                    style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 4;"/>
+                      prefWidth="170"/>
         </ToolBar>
     </top>
 
@@ -160,4 +146,13 @@
 
         </VBox>
     </center>
+    <bottom>
+        <HBox alignment="CENTER_RIGHT"
+              spacing="10"
+              style="-fx-padding: 5 10 5 10;">
+            <Button text="Cerrar sesión"
+                    onAction="#onLogout"
+                    style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 4;"/>
+        </HBox>
+    </bottom>
 </BorderPane>
