@@ -124,12 +124,14 @@ public class PrincipalController {
 
             sistema.realizarDeposito(c, m, monto);
             actualizarMonedero(c, m);
-        } catch (NumberFormatException e) {
-            mostrarAlerta("Monto inválido", "Ingrese un número válido.");
+
+            limpiarCampos();
+
         } catch (Exception e) {
-            mostrarAlerta("Error al depositar", e.getMessage());
+            mostrarAlerta("Error", e.getMessage());
         }
     }
+
 
     @FXML
     private void onRetirar() {
@@ -150,6 +152,7 @@ public class PrincipalController {
 
             sistema.realizarRetiro(c, m, monto);
             actualizarMonedero(c, m);
+            limpiarCampos();
         } catch (NumberFormatException e) {
             mostrarAlerta("Monto inválido", "Ingrese un número válido.");
         } catch (Exception e) {
@@ -194,6 +197,7 @@ public class PrincipalController {
             );
 
             actualizarMonedero(clienteOrigen, monederoOrigen);
+            limpiarCampos();
             txtMonto.clear();
         } catch (NumberFormatException e) {
             mostrarAlerta("Monto inválido", "Ingrese un número válido.");
@@ -333,6 +337,23 @@ public class PrincipalController {
             );
         } else {
             comboMonederosDestino.getItems().clear();
+        }
+    }
+
+    private void limpiarCampos() {
+        // Limpia el monto
+        txtMonto.clear();
+
+        // Limpia combos de destino
+        if (comboClientesDestino != null) {
+            comboClientesDestino.getSelectionModel().clearSelection();
+        }
+        if (comboMonederosDestino != null) {
+            comboMonederosDestino.getSelectionModel().clearSelection();
+            comboMonederosDestino.getItems().clear();
+        }
+        if (txtMonto.getParent() != null) {
+            txtMonto.getParent().requestFocus();
         }
     }
 
