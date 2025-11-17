@@ -257,4 +257,27 @@ public class PrincipalController {
         a.setTitle(titulo);
         a.showAndWait();
     }
+
+    @FXML
+    private void onOrdenarHistorial() {
+        Cliente c = comboClientes.getValue();
+        Monedero m = comboMonederos.getValue();
+
+        if (c == null || m == null) {
+            mostrarAlerta("Ordenar historial", "Seleccione un cliente y un monedero.");
+            return;
+        }
+
+        var listaOrdenada = OrdenadorTransacciones.ordenarPorFecha(m);
+
+        StringBuilder sb = new StringBuilder();
+        for (Transaccion t : listaOrdenada) {
+            sb.append(t.getFecha())
+                    .append(" - ")
+                    .append(t.getDescripcion())
+                    .append("\n");
+        }
+        txtHistorial.setText(sb.toString());
+    }
+
 }
