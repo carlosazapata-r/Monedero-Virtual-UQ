@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.monedero.controller.PrincipalController">
+
+    <top>
+        <ToolBar>
+            <Label text="Cliente:"/>
+            <ComboBox fx:id="comboClientes"
+                      onAction="#onClienteSeleccionado"
+                      prefWidth="200"/>
+
+            <Separator orientation="VERTICAL"/>
+
+            <Label text="Monedero:"/>
+            <ComboBox fx:id="comboMonederos"
+                      onAction="#onMonederoSeleccionado"
+                      prefWidth="250"/>
+        </ToolBar>
+    </top>
+
+    <center>
+        <VBox spacing="10">
+            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+
+            <HBox spacing="10">
+                <Label text="Monto:"/>
+                <TextField fx:id="txtMonto" promptText="Ingrese monto"/>
+
+                <Button text="Depositar" onAction="#onDepositar"/>
+                <Button text="Retirar" onAction="#onRetirar"/>
+                <Button text="Transferir" onAction="#onTransferir"/>
+            </HBox>
+
+            <HBox spacing="20">
+                <Label text="Saldo:"/>
+                <Label fx:id="lblSaldo" text="0.0"/>
+
+                <Label text="Puntos:"/>
+                <Label fx:id="lblPuntos" text="0"/>
+
+                <Label text="Rango:"/>
+                <Label fx:id="lblRango" text="BRONCE"/>
+
+                <Button text="Canjear 100 pts" onAction="#onCanjear100"/>
+                <Button text="Análisis de gastos" onAction="#onVerAnalisis"/>
+            </HBox>
+
+            <Label text="Historial de transacciones:"/>
+            <TextArea fx:id="txtHistorial"
+                      prefRowCount="15"
+                      wrapText="true"/>
+        </VBox>
+    </center>
+</BorderPane>
