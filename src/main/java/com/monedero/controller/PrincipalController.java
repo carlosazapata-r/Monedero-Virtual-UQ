@@ -16,6 +16,12 @@ import com.monedero.App;
 import com.monedero.controller.LoginController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.ComboBox;
+import java.time.LocalDate;
+import com.monedero.model.transaccion.TransaccionProgramada;
+
 
 
 public class PrincipalController {
@@ -47,6 +53,16 @@ public class PrincipalController {
     @FXML
     private ComboBox<Monedero> comboMonederosDestino;
 
+    @FXML
+    private ComboBox<String> comboTipoProgramada;
+
+    @FXML
+    private DatePicker datePickerProgramada;
+
+    @FXML
+    private CheckBox checkRecurrente;
+
+
 
     private SistemaMonedero sistema;
 
@@ -65,7 +81,14 @@ public class PrincipalController {
                     FXCollections.observableArrayList(sistema.getClientes())
             );
         }
+
+        if (comboTipoProgramada != null) {
+            comboTipoProgramada.setItems(
+                    FXCollections.observableArrayList("DEPOSITO", "TRANSFERENCIA")
+            );
+        }
     }
+
 
     /** Lo llama LoginController para que el cliente logueado quede seleccionado */
     public void seleccionarCliente(Cliente cliente) {
@@ -405,6 +428,72 @@ public class PrincipalController {
             txtMonto.getParent().requestFocus();
         }
     }
+
+    @FXML
+    private void onProgramarTransaccion() {
+        try {
+            Cliente clienteOrigen = comboClientes.getValue();
+            Monedero monederoOrigen = comboMonederos.getValue();
+            Cliente clienteDestino = comboClientesDestino.getValue();
+            Monedero monederoDestino = comboMonederosDestino.getValue();
+            String tipo = comboTipoProgramada.getValue();
+            LocalDate fecha = datePickerProgramada.getValue();
+            double monto = leerMonto();
+
+            if (clienteOrigen == null || monederoOrigen == null) {
+                mostrarAlerta("Transacción programada", "Seleccione cliente y monedero origen.");
+                return;
+            }
+
+            if (tipo == null || fecha == null) {
+                mostrarAlerta("Transacción programada", "Seleccione tipo y fecha de ejecución.");
+                return;
+            }
+
+            if ("TRANSFERENCIA".equals(tipo)) {
+                if (clienteDestino == null || monederoDestino == null) {
+                    mostrarAlerta("Transacción programada",
+                            "Para transferencias, seleccione cliente y monedero destino.");
+                    return;
+                }
+            }
+
+            TransaccionProgramada.Tipo tipoEnum =
+                    "DEPOSITO".equals(tipo)
+                            ? TransaccionProgramada.Tipo.DEPOSITO
+                            : TransaccionProgramada.Tipo.TRANSFERENCIA;
+
+            TransaccionProgramada t = new TransaccionProgramada(
+                    tipoEnum,
+                    clienteOrigen,
+                    monederoOrigen,
+                    clienteDestino,
+                    monederoDestino,
+                    monto,
+                    fecha,
+                    checkRecurrente.isSelected(),
+                    30 // se repite cada 30 días si es recurrente
+            );
+
+            sistema.programarTransaccion(t);
+            mostrarInfo("Transacción programada", "La transacción fue agendada correctamente.");
+
+            limpiarCampos();
+
+        } catch (NumberFormatException e) {
+            mostrarAlerta("Monto inválido", "Ingrese un número válido.");
+        } catch (Exception e) {
+            mostrarAlerta("Error", e.getMessage());
+        }
+    }
+
+    @FXML
+    private void onProcesarTransacciones() {
+        sistema.procesarTransaccionesProgramadas();
+        mostrarInfo("Transacciones programadas", "Se han procesado las transacciones pendientes.");
+    }
+
+
 
 
 

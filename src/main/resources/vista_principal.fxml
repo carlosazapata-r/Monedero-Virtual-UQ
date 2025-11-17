@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
@@ -129,6 +130,34 @@
                     </VBox>
                 </content>
             </TitledPane>
+
+            <TitledPane text="Transacciones programadas" expanded="false">
+                <content>
+                    <VBox spacing="8" style="-fx-padding: 8;">
+                        <HBox spacing="10">
+                            <Label text="Tipo:"/>
+                            <ComboBox fx:id="comboTipoProgramada" prefWidth="140"/>
+                        </HBox>
+
+                        <HBox spacing="10">
+                            <Label text="Fecha ejecución:"/>
+                            <DatePicker fx:id="datePickerProgramada"/>
+                        </HBox>
+
+                        <HBox spacing="10">
+                            <CheckBox fx:id="checkRecurrente" text="Recurrente cada 30 días"/>
+                        </HBox>
+
+                        <HBox spacing="10">
+                            <Button text="Programar transacción"
+                                    onAction="#onProgramarTransaccion"/>
+                            <Button text="Procesar pendientes"
+                                    onAction="#onProcesarTransacciones"/>
+                        </HBox>
+                    </VBox>
+                </content>
+            </TitledPane>
+
         </VBox>
     </center>
 </BorderPane>

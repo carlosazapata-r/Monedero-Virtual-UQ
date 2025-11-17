@@ -54,7 +54,7 @@ public abstract class Monedero {
         }
     }
 
-    // este sí puede quedar private/protected
+
     private void registrarTransaccion(Transaccion t) {
         historial.add(t);
     }
