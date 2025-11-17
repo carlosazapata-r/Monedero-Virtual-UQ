@@ -2,6 +2,7 @@ package com.monedero.model;
 
 import com.monedero.model.monedero.Monedero;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,10 +10,15 @@ import java.util.List;
 public class Cliente {
 
     private String id;
-    private String nombre;
+    private String nombre;     // usuario para login
     private String password;   // contraseña
+
     private List<Monedero> monederos;
     private int puntos;
+
+    private boolean descuentoTransferencias10Activo;
+
+    private LocalDate retirosSinCargoHasta;
 
     public Cliente(String id, String nombre, String password) {
         this.id = id;
@@ -20,6 +26,8 @@ public class Cliente {
         this.password = password;
         this.monederos = new ArrayList<>();
         this.puntos = 0;
+        this.descuentoTransferencias10Activo = false;
+        this.retirosSinCargoHasta = null;
     }
 
     public String getId() {
@@ -42,12 +50,40 @@ public class Cliente {
         this.monederos.add(m);
     }
 
+
     public int getPuntos() {
         return puntos;
     }
 
-    public void agregarPuntos(int puntos) {
-        this.puntos += puntos;
+    public void agregarPuntos(int cantidad) {
+        this.puntos += cantidad;
+        if (this.puntos < 0) {
+            this.puntos = 0;
+        }
+    }
+
+
+    public void activarDescuentoTransferencias10() {
+        this.descuentoTransferencias10Activo = true;
+    }
+
+    public boolean tieneDescuentoTransferencias10() {
+        return descuentoTransferencias10Activo;
+    }
+
+    public void consumirDescuentoTransferencias10() {
+        this.descuentoTransferencias10Activo = false;
+    }
+
+    // ----- Beneficio: 500 pts → retiros sin cargo 1 mes -----
+
+    public void activarRetirosSinCargoUnMes() {
+        this.retirosSinCargoHasta = LocalDate.now().plusMonths(1);
+    }
+
+    public boolean tieneRetirosSinCargoVigente() {
+        return retirosSinCargoHasta != null
+                && !LocalDate.now().isAfter(retirosSinCargoHasta);
     }
 
     @Override
@@ -55,4 +91,3 @@ public class Cliente {
         return nombre + " (ID: " + id + ")";
     }
 }
-

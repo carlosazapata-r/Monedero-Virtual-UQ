@@ -39,15 +39,19 @@ public abstract class Monedero {
      */
     public void acreditar(double monto, Transaccion t) {
         this.saldo += monto;
-        registrarTransaccion(t);
+        if (t != null) {
+            historial.add(t);
+        }
     }
 
     public void debitar(double monto, Transaccion t) throws Exception {
-        if (this.saldo < monto) {
-            throw new Exception("Saldo insuficiente");
+        if (saldo < monto) {
+            throw new Exception("Saldo insuficiente.");
         }
         this.saldo -= monto;
-        registrarTransaccion(t);
+        if (t != null) {
+            historial.add(t);
+        }
     }
 
     // este sí puede quedar private/protected

@@ -214,10 +214,59 @@ public class PrincipalController {
                 mostrarAlerta("Canje de puntos", "Seleccione un cliente.");
                 return;
             }
+
             GestorPuntos.canjear(c, 100);
             actualizarDatosCliente(c);
+
+            mostrarInfo("Canje de 100 puntos",
+                    "Beneficio activado: 10% de descuento en la comisión de tu próxima transferencia.");
         } catch (Exception e) {
-            mostrarAlerta("Error al canjear", e.getMessage());
+            mostrarAlerta("Canje de puntos", e.getMessage());
+        }
+    }
+
+    @FXML
+    private void onCanjear500() {
+        try {
+            Cliente c = comboClientes.getValue();
+            if (c == null) {
+                mostrarAlerta("Canje de puntos", "Seleccione un cliente.");
+                return;
+            }
+
+            GestorPuntos.canjear(c, 500);
+            actualizarDatosCliente(c);
+
+            mostrarInfo("Canje de 500 puntos",
+                    "Beneficio activado: Retiros sin cargo durante 1 mes.");
+        } catch (Exception e) {
+            mostrarAlerta("Canje de puntos", e.getMessage());
+        }
+    }
+
+    @FXML
+    private void onCanjear1000() {
+        try {
+            Cliente c = comboClientes.getValue();
+            Monedero m = comboMonederos.getValue();
+
+            if (c == null || m == null) {
+                mostrarAlerta("Canje de puntos", "Seleccione un cliente y un monedero para recibir el bono.");
+                return;
+            }
+
+            // Descontamos los puntos (GestorPuntos se encarga de validar)
+            GestorPuntos.canjear(c, 1000);
+
+            // Aplicamos bono de 50 unidades al monedero seleccionado
+            m.acreditar(50, null);
+            actualizarMonedero(c, m);
+            actualizarDatosCliente(c);
+
+            mostrarInfo("Canje de 1000 puntos",
+                    "Beneficio activado: Has recibido un bono de 50 unidades en este monedero.");
+        } catch (Exception e) {
+            mostrarAlerta("Canje de puntos", e.getMessage());
         }
     }
 

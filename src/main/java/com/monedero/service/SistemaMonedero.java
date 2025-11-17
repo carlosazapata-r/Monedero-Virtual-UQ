@@ -44,8 +44,19 @@ public class SistemaMonedero {
     }
 
     public void realizarRetiro(Cliente cliente, Monedero monedero, double monto) throws Exception {
+        double cargo = monto * 0.01;
+
+        if (cliente.tieneRetirosSinCargoVigente()) {
+            cargo = 0;
+        }
+
         Retiro r = new Retiro(monto, monedero);
         r.ejecutar();
+
+        if (cargo > 0) {
+            monedero.debitar(cargo, null);
+        }
+
         GestorPuntos.aplicarPuntos(cliente, r);
         verificarSaldoBajo(cliente, monedero);
     }
@@ -76,14 +87,21 @@ public class SistemaMonedero {
                                       Monedero monederoDestino,
                                       double monto) throws Exception {
 
+        double comision = monto * 0.02;
+
+        if (clienteOrigen.tieneDescuentoTransferencias10()) {
+            comision = comision * 0.9; // 10% menos
+            clienteOrigen.consumirDescuentoTransferencias10();
+        }
+
         Transferencia t = new Transferencia(monto, monederoOrigen, monederoDestino);
         t.ejecutar();
 
-        // Aplicamos puntos al cliente que envía
-        GestorPuntos.aplicarPuntos(clienteOrigen, t);
+        if (comision > 0) {
+            monederoOrigen.debitar(comision, null);
+        }
 
-        // Verificamos saldo bajo en el monedero origen
+        GestorPuntos.aplicarPuntos(clienteOrigen, t);
         verificarSaldoBajo(clienteOrigen, monederoOrigen);
     }
-
 }

@@ -103,14 +103,15 @@
                         </HBox>
 
                         <HBox spacing="10">
-                            <Button text="Canjear 100 pts"
-                                    onAction="#onCanjear100"
+                            <Button text="Canjear 100 pts" onAction="#onCanjear100"
                                     style="-fx-background-radius: 4;"/>
-                            <Button text="Análisis de gastos"
-                                    onAction="#onVerAnalisis"
+                            <Button text="Canjear 500 pts" onAction="#onCanjear500"
                                     style="-fx-background-radius: 4;"/>
-                            <Button text="Ordenar historial"
-                                    onAction="#onOrdenarHistorial"
+                            <Button text="Canjear 1000 pts" onAction="#onCanjear1000"
+                                    style="-fx-background-radius: 4;"/>
+                            <Button text="Análisis de gastos" onAction="#onVerAnalisis"
+                                    style="-fx-background-radius: 4;"/>
+                            <Button text="Ordenar historial" onAction="#onOrdenarHistorial"
                                     style="-fx-background-radius: 4;"/>
                         </HBox>
                     </VBox>
