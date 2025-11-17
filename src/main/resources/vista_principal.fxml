@@ -150,6 +150,13 @@
         <HBox alignment="CENTER_RIGHT"
               spacing="10"
               style="-fx-padding: 5 10 5 10;">
+
+            <Label fx:id="lblEstado"
+                   text=""
+                   style="-fx-text-fill: #555555; -fx-font-size: 12px;"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
             <Button text="Cerrar sesión"
                     onAction="#onLogout"
                     style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 4;"/>

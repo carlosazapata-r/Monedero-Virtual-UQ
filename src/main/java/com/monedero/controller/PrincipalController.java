@@ -21,6 +21,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.ComboBox;
 import java.time.LocalDate;
 import com.monedero.model.transaccion.TransaccionProgramada;
+import javafx.scene.control.Label;
 
 
 
@@ -61,6 +62,9 @@ public class PrincipalController {
 
     @FXML
     private CheckBox checkRecurrente;
+
+    @FXML
+    private Label lblEstado;
 
 
 
@@ -136,22 +140,29 @@ public class PrincipalController {
 
             if (c == null || m == null) {
                 mostrarAlerta("Operación inválida", "Seleccione un cliente y un monedero.");
+                mostrarEstadoError("Seleccione cliente y monedero antes de depositar.");
                 return;
             }
 
             double monto = leerMonto();
             if (monto <= 0) {
                 mostrarAlerta("Monto inválido", "El monto debe ser mayor que cero.");
+                mostrarEstadoError("El monto debe ser mayor que cero.");
                 return;
             }
 
             sistema.realizarDeposito(c, m, monto);
             actualizarMonedero(c, m);
-
             limpiarCampos();
 
+            mostrarEstadoOk("Depósito de " + monto + " realizado correctamente.");
+
+        } catch (NumberFormatException e) {
+            mostrarAlerta("Monto inválido", "Ingrese un número válido.");
+            mostrarEstadoError("Error: formato de monto inválido.");
         } catch (Exception e) {
             mostrarAlerta("Error", e.getMessage());
+            mostrarEstadoError("Error al depositar: " + e.getMessage());
         }
     }
 
@@ -159,27 +170,35 @@ public class PrincipalController {
     @FXML
     private void onRetirar() {
         try {
-            Cliente c = comboClientes.getValue();
-            Monedero m = comboMonederos.getValue();
+            Cliente cliente = comboClientes.getValue();
+            Monedero monedero = comboMonederos.getValue();
 
-            if (c == null || m == null) {
+            if (cliente == null || monedero == null) {
                 mostrarAlerta("Operación inválida", "Seleccione un cliente y un monedero.");
+                mostrarEstadoError("Seleccione cliente y monedero antes de retirar.");
                 return;
             }
 
             double monto = leerMonto();
             if (monto <= 0) {
                 mostrarAlerta("Monto inválido", "El monto debe ser mayor que cero.");
+                mostrarEstadoError("El monto debe ser mayor que cero.");
                 return;
             }
 
-            sistema.realizarRetiro(c, m, monto);
-            actualizarMonedero(c, m);
+            sistema.realizarRetiro(cliente, monedero, monto);
+            actualizarMonedero(cliente, monedero);
+            actualizarDatosCliente(cliente);
             limpiarCampos();
+
+            mostrarEstadoOk("Retiro de " + monto + " realizado correctamente.");
+
         } catch (NumberFormatException e) {
-            mostrarAlerta("Monto inválido", "Ingrese un número válido.");
+            mostrarAlerta("Error", "Ingrese un monto válido.");
+            mostrarEstadoError("Monto inválido.");
         } catch (Exception e) {
-            mostrarAlerta("Error al retirar", e.getMessage());
+            mostrarAlerta("Error", e.getMessage());
+            mostrarEstadoError("Error al retirar: " + e.getMessage());
         }
     }
 
@@ -188,28 +207,31 @@ public class PrincipalController {
         try {
             Cliente clienteOrigen = comboClientes.getValue();
             Monedero monederoOrigen = comboMonederos.getValue();
-
             Cliente clienteDestino = comboClientesDestino.getValue();
             Monedero monederoDestino = comboMonederosDestino.getValue();
 
             if (clienteOrigen == null || monederoOrigen == null) {
-                mostrarAlerta("Transferencia", "Seleccione cliente y monedero ORIGEN.");
+                mostrarAlerta("Operación inválida", "Seleccione cliente y monedero origen.");
+                mostrarEstadoError("Seleccione cliente y monedero origen antes de transferir.");
                 return;
             }
 
             if (clienteDestino == null || monederoDestino == null) {
-                mostrarAlerta("Transferencia", "Seleccione cliente y monedero DESTINO.");
+                mostrarAlerta("Operación inválida", "Seleccione cliente y monedero destino.");
+                mostrarEstadoError("Seleccione cliente y monedero destino antes de transferir.");
                 return;
             }
 
             if (clienteOrigen == clienteDestino && monederoOrigen == monederoDestino) {
-                mostrarAlerta("Transferencia", "El origen y el destino no pueden ser el mismo.");
+                mostrarAlerta("Operación inválida", "No puede transferirse a sí mismo.");
+                mostrarEstadoError("Transferencia inválida (origen y destino iguales).");
                 return;
             }
 
             double monto = leerMonto();
             if (monto <= 0) {
                 mostrarAlerta("Monto inválido", "El monto debe ser mayor que cero.");
+                mostrarEstadoError("Monto inválido para transferir.");
                 return;
             }
 
@@ -220,12 +242,20 @@ public class PrincipalController {
             );
 
             actualizarMonedero(clienteOrigen, monederoOrigen);
+            actualizarMonedero(clienteDestino, monederoDestino);
+            actualizarDatosCliente(clienteOrigen);
+            actualizarDatosCliente(clienteDestino);
+
             limpiarCampos();
-            txtMonto.clear();
+
+            mostrarEstadoOk("Transferencia de " + monto + " realizada correctamente.");
+
         } catch (NumberFormatException e) {
-            mostrarAlerta("Monto inválido", "Ingrese un número válido.");
+            mostrarAlerta("Error", "Ingrese un monto válido.");
+            mostrarEstadoError("Monto inválido.");
         } catch (Exception e) {
-            mostrarAlerta("Error al transferir", e.getMessage());
+            mostrarAlerta("Error", e.getMessage());
+            mostrarEstadoError("Error al transferir: " + e.getMessage());
         }
     }
 
@@ -492,6 +522,21 @@ public class PrincipalController {
         sistema.procesarTransaccionesProgramadas();
         mostrarInfo("Transacciones programadas", "Se han procesado las transacciones pendientes.");
     }
+
+    private void mostrarEstadoOk(String mensaje) {
+        if (lblEstado != null) {
+            lblEstado.setText(mensaje);
+            lblEstado.setStyle("-fx-text-fill: #2ecc71; -fx-font-size: 12px;");
+        }
+    }
+
+    private void mostrarEstadoError(String mensaje) {
+        if (lblEstado != null) {
+            lblEstado.setText(mensaje);
+            lblEstado.setStyle("-fx-text-fill: #e74c3c; -fx-font-size: 12px;");
+        }
+    }
+
 
 
 
