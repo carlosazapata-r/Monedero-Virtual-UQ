@@ -88,6 +88,6 @@ public class Cliente {
 
     @Override
     public String toString() {
-        return nombre + " (ID: " + id + ")";
+        return nombre;
     }
 }

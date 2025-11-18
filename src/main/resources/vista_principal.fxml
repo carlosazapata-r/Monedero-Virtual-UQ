@@ -8,35 +8,53 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.monedero.controller.PrincipalController"
-            style="-fx-background-color: linear-gradient(to bottom right, #dfe6e9, #b2bec3);">
+            style="-fx-background-color: #f5f6fa;">
 
     <top>
         <ToolBar style="-fx-background-color: #dbe4f0; -fx-padding: 6;">
-            <!-- ORIGEN -->
-            <Label text="Cliente origen:"/>
-            <ComboBox fx:id="comboClientes"
-                      onAction="#onClienteSeleccionado"
-                      prefWidth="150"/>
+            <HBox spacing="30" alignment="CENTER_LEFT">
+                <padding>
+                    <Insets top="6" left="10" right="10" bottom="6"/>
+                </padding>
 
-            <Label text="Monedero origen:"/>
-            <ComboBox fx:id="comboMonederos"
-                      onAction="#onMonederoSeleccionado"
-                      prefWidth="170"/>
+                <!-- Combo oculto que usa el controlador para guardar el cliente actual -->
+                <ComboBox fx:id="comboClientes"
+                          visible="false"
+                          managed="false"/>
 
-            <Separator orientation="VERTICAL"/>
+                <!-- BIENVENIDA -->
+                <Label fx:id="lblBienvenido"
+                       text="Bienvenido"
+                       style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
 
-            <!-- DESTINO -->
-            <Label text="Cliente destino:"/>
-            <ComboBox fx:id="comboClientesDestino"
-                      onAction="#onClienteDestinoSeleccionado"
-                      prefWidth="150"/>
+                <!-- Separador visual -->
+                <Separator orientation="VERTICAL" prefHeight="30"/>
 
-            <Label text="Monedero destino:"/>
-            <ComboBox fx:id="comboMonederosDestino"
-                      prefWidth="170"/>
+                <!-- BLOQUE: MONEDERO ORIGEN -->
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="Monedero origen:"/>
+                    <ComboBox fx:id="comboMonederos"
+                              onAction="#onMonederoSeleccionado"
+                              prefWidth="170"/>
+                </HBox>
+
+                <!-- BLOQUE: CLIENTE DESTINO -->
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="Cliente destino:"/>
+                    <ComboBox fx:id="comboClientesDestino"
+                              onAction="#onClienteDestinoSeleccionado"
+                              prefWidth="150"/>
+                </HBox>
+
+                <!-- BLOQUE: MONEDERO DESTINO -->
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="Monedero destino:"/>
+                    <ComboBox fx:id="comboMonederosDestino"
+                              prefWidth="170"/>
+                </HBox>
+            </HBox>
         </ToolBar>
     </top>
-
 
     <center>
         <VBox spacing="12" style="-fx-padding: 15;">

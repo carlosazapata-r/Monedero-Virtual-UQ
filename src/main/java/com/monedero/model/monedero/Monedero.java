@@ -32,29 +32,30 @@ public abstract class Monedero {
         return Collections.unmodifiableList(historial);
     }
 
-    /**
-     * MÉTODOS PÚBLICOS para modificar saldo de forma segura
-     * @param monto
-     * @param t
-     */
     public void acreditar(double monto, Transaccion t) {
+        if (monto <= 0) return;
+
         this.saldo += monto;
+
         if (t != null) {
             historial.add(t);
         }
     }
 
     public void debitar(double monto, Transaccion t) throws Exception {
+        if (monto <= 0) {
+            throw new Exception("El monto debe ser mayor que cero.");
+        }
         if (saldo < monto) {
             throw new Exception("Saldo insuficiente.");
         }
+
         this.saldo -= monto;
+
         if (t != null) {
             historial.add(t);
         }
     }
-
-
     private void registrarTransaccion(Transaccion t) {
         historial.add(t);
     }
@@ -64,4 +65,3 @@ public abstract class Monedero {
         return getTipo() + " (" + id + ") - Saldo: " + saldo;
     }
 }
-

@@ -22,8 +22,7 @@ import javafx.scene.control.ComboBox;
 import java.time.LocalDate;
 import com.monedero.model.transaccion.TransaccionProgramada;
 import javafx.scene.control.Label;
-
-
+import javafx.scene.control.ListCell;
 
 public class PrincipalController {
 
@@ -66,76 +65,96 @@ public class PrincipalController {
     @FXML
     private Label lblEstado;
 
+    @FXML
+    private Label lblBienvenido;
 
 
     private SistemaMonedero sistema;
+    private Cliente clienteActual;
 
-
+    private Stage stage;
 
     /** Lo llama App o LoginController después de cargar el FXML */
     public void setSistema(SistemaMonedero sistema) {
         this.sistema = sistema;
-        if (comboClientes != null) {
-            comboClientes.setItems(
-                    FXCollections.observableArrayList(sistema.getClientes())
-            );
-        }
+
+        // Clientes destino (para transferencias entre clientes)
         if (comboClientesDestino != null) {
             comboClientesDestino.setItems(
                     FXCollections.observableArrayList(sistema.getClientes())
             );
         }
 
+        // Tipos de transacción programada
         if (comboTipoProgramada != null) {
             comboTipoProgramada.setItems(
                     FXCollections.observableArrayList("DEPOSITO", "TRANSFERENCIA")
             );
         }
+
+        // Cómo se muestran los monederos en los combos
+        configurarComboMonedero(comboMonederos);
+        configurarComboMonedero(comboMonederosDestino);
     }
+
 
 
     /** Lo llama LoginController para que el cliente logueado quede seleccionado */
     public void seleccionarCliente(Cliente cliente) {
         if (sistema == null || cliente == null) return;
 
-        comboClientes.setItems(
-                FXCollections.observableArrayList(sistema.getClientes())
-        );
+        // Guardamos el cliente logueado
+        this.clienteActual = cliente;
 
-        comboClientes.getSelectionModel().select(cliente);
-        onClienteSeleccionado(); // carga monederos, puntos, etc.
-    }
+        // (comboClientes es oculto pero lo mantenemos sincronizado por si algo lo usa)
+        if (comboClientes != null) {
+            comboClientes.setItems(FXCollections.observableArrayList(cliente));
+            comboClientes.getSelectionModel().selectFirst();
+        }
 
-    /**
-     * MANEJO DE EVENTOS FXML
-     */
+        // Mensaje de bienvenida
+        if (lblBienvenido != null) {
+            lblBienvenido.setText("Bienvenido, " + cliente.getNombre());
+        }
 
-    @FXML
-    private void onClienteSeleccionado() {
-        Cliente c = comboClientes.getValue();
-        if (c != null) {
+        // Cargamos los monederos de ese cliente para el combo de origen
+        if (comboMonederos != null) {
             comboMonederos.setItems(
-                    FXCollections.observableArrayList(c.getMonederos())
+                    FXCollections.observableArrayList(cliente.getMonederos())
             );
-            actualizarDatosCliente(c);
-            lblSaldo.setText("0.0");
+            comboMonederos.getSelectionModel().clearSelection();
+        }
+
+        // Puntos y rango
+        actualizarDatosCliente(cliente);
+
+        // Reseteamos saldo visible e historial hasta que el usuario elija un monedero
+        if (lblSaldo != null) {
+            lblSaldo.setText("$ 0.00");
+        }
+        if (txtHistorial != null) {
             txtHistorial.clear();
         }
     }
 
+
+
+    @FXML
+    private void onClienteSeleccionado() {
+    }
+
     @FXML
     private void onMonederoSeleccionado() {
-        Cliente c = comboClientes.getValue();
         Monedero m = comboMonederos.getValue();
-        if (c != null && m != null) {
-            actualizarMonedero(c, m);
+        if (clienteActual != null && m != null) {
+            actualizarMonedero(clienteActual, m);
         }
     }
 
     @FXML
     private void onDepositar() {
         try {
-            Cliente c = comboClientes.getValue();
+            Cliente c = clienteActual;
             Monedero m = comboMonederos.getValue();
 
             if (c == null || m == null) {
@@ -155,7 +174,7 @@ public class PrincipalController {
             actualizarMonedero(c, m);
             limpiarCampos();
 
-            mostrarEstadoOk("Depósito de " + monto + " realizado correctamente.");
+            mostrarEstadoOk("Depósito de $ " + String.format("%.2f", monto) + " realizado correctamente.");
 
         } catch (NumberFormatException e) {
             mostrarAlerta("Monto inválido", "Ingrese un número válido.");
@@ -166,11 +185,10 @@ public class PrincipalController {
         }
     }
 
-
     @FXML
     private void onRetirar() {
         try {
-            Cliente cliente = comboClientes.getValue();
+            Cliente cliente = clienteActual;
             Monedero monedero = comboMonederos.getValue();
 
             if (cliente == null || monedero == null) {
@@ -191,7 +209,7 @@ public class PrincipalController {
             actualizarDatosCliente(cliente);
             limpiarCampos();
 
-            mostrarEstadoOk("Retiro de " + monto + " realizado correctamente.");
+            mostrarEstadoOk("Retiro de $ " + String.format("%.2f", monto) + " realizado correctamente.");
 
         } catch (NumberFormatException e) {
             mostrarAlerta("Error", "Ingrese un monto válido.");
@@ -205,7 +223,7 @@ public class PrincipalController {
     @FXML
     private void onTransferir() {
         try {
-            Cliente clienteOrigen = comboClientes.getValue();
+            Cliente clienteOrigen = clienteActual;
             Monedero monederoOrigen = comboMonederos.getValue();
             Cliente clienteDestino = comboClientesDestino.getValue();
             Monedero monederoDestino = comboMonederosDestino.getValue();
@@ -241,14 +259,13 @@ public class PrincipalController {
                     monto
             );
 
+
             actualizarMonedero(clienteOrigen, monederoOrigen);
-            actualizarMonedero(clienteDestino, monederoDestino);
             actualizarDatosCliente(clienteOrigen);
-            actualizarDatosCliente(clienteDestino);
 
             limpiarCampos();
 
-            mostrarEstadoOk("Transferencia de " + monto + " realizada correctamente.");
+            mostrarEstadoOk("Transferencia de $ " + String.format("%.2f", monto) + " realizada correctamente.");
 
         } catch (NumberFormatException e) {
             mostrarAlerta("Error", "Ingrese un monto válido.");
@@ -262,7 +279,7 @@ public class PrincipalController {
     @FXML
     private void onCanjear100() {
         try {
-            Cliente c = comboClientes.getValue();
+            Cliente c = clienteActual;
             if (c == null) {
                 mostrarAlerta("Canje de puntos", "Seleccione un cliente.");
                 return;
@@ -281,7 +298,7 @@ public class PrincipalController {
     @FXML
     private void onCanjear500() {
         try {
-            Cliente c = comboClientes.getValue();
+            Cliente c = clienteActual;
             if (c == null) {
                 mostrarAlerta("Canje de puntos", "Seleccione un cliente.");
                 return;
@@ -300,7 +317,7 @@ public class PrincipalController {
     @FXML
     private void onCanjear1000() {
         try {
-            Cliente c = comboClientes.getValue();
+            Cliente c = clienteActual;
             Monedero m = comboMonederos.getValue();
 
             if (c == null || m == null) {
@@ -308,7 +325,6 @@ public class PrincipalController {
                 return;
             }
 
-            // Descontamos los puntos (GestorPuntos se encarga de validar)
             GestorPuntos.canjear(c, 1000);
 
             // Aplicamos bono de 50 unidades al monedero seleccionado
@@ -325,7 +341,7 @@ public class PrincipalController {
 
     @FXML
     private void onVerAnalisis() {
-        Cliente c = comboClientes.getValue();
+        Cliente c = clienteActual;
         Monedero m = comboMonederos.getValue();
 
         if (c == null || m == null) {
@@ -337,14 +353,12 @@ public class PrincipalController {
         double promedio = AnalizadorGastos.gastoPromedioPorDia(m);
 
         mostrarInfo("Análisis de gastos",
-                "Total gastado: " + total + "\n" +
-                        "Gasto promedio por día: " + promedio);
+                "Total gastado: $ " + String.format("%.2f", total) + "\n" +
+                        "Gasto promedio por día: $ " + String.format("%.2f", promedio));
     }
 
     /**
      * MÉTODOS AUXILIARES
-     * @return
-     * @throws NumberFormatException
      */
 
     private double leerMonto() throws NumberFormatException {
@@ -353,7 +367,10 @@ public class PrincipalController {
     }
 
     private void actualizarMonedero(Cliente c, Monedero m) {
-        lblSaldo.setText(String.valueOf(m.getSaldo()));
+        if (c == null || m == null) return;
+
+        lblSaldo.setText(String.format("$ %.2f", m.getSaldo()));
+
         actualizarDatosCliente(c);
 
         StringBuilder sb = new StringBuilder();
@@ -386,7 +403,7 @@ public class PrincipalController {
 
     @FXML
     private void onOrdenarHistorial() {
-        Cliente c = comboClientes.getValue();
+        Cliente c = clienteActual;
         Monedero m = comboMonederos.getValue();
 
         if (c == null || m == null) {
@@ -405,8 +422,6 @@ public class PrincipalController {
         }
         txtHistorial.setText(sb.toString());
     }
-
-    private Stage stage;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -462,7 +477,7 @@ public class PrincipalController {
     @FXML
     private void onProgramarTransaccion() {
         try {
-            Cliente clienteOrigen = comboClientes.getValue();
+            Cliente clienteOrigen = clienteActual;
             Monedero monederoOrigen = comboMonederos.getValue();
             Cliente clienteDestino = comboClientesDestino.getValue();
             Monedero monederoDestino = comboMonederosDestino.getValue();
@@ -537,9 +552,44 @@ public class PrincipalController {
         }
     }
 
+    /** ---------- Configuración visual de los ComboBox de Monedero ---------- */
 
+    private void configurarComboMonedero(ComboBox<Monedero> combo) {
+        if (combo == null) return;
 
+        combo.setCellFactory(listView -> new ListCell<>() {
+            @Override
+            protected void updateItem(Monedero item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(textoMonedero(item));
+                }
+            }
+        });
 
+        combo.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Monedero item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(textoMonedero(item));
+                }
+            }
+        });
+    }
 
-
+    private String textoMonedero(Monedero m) {
+        String tipo;
+        String simpleName = m.getClass().getSimpleName();
+        if (simpleName.contains("Ahorros")) {
+            tipo = "Ahorros";
+        } else {
+            tipo = "Gastos Diarios";
+        }
+        return tipo + " - $ " + String.format("%.2f", m.getSaldo());
+    }
 }
