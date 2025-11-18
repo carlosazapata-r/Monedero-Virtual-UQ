@@ -35,6 +35,11 @@ public class SistemaMonedero {
         return clientes;
     }
 
+    /**
+     * CRUD cliente
+     * @param id
+     * @return
+     */
     public Cliente buscarClientePorId(String id) {
         return clientes.stream()
                 .filter(c -> c.getId().equals(id))
@@ -49,6 +54,13 @@ public class SistemaMonedero {
                 .orElse(null);
     }
 
+    /**
+     * metodo para realizar deposito
+     * @param cliente
+     * @param monedero
+     * @param monto
+     * @throws Exception
+     */
     public void realizarDeposito(Cliente cliente, Monedero monedero, double monto) throws Exception {
         Deposito d = new Deposito(monto, monedero);
         d.ejecutar();
@@ -56,6 +68,13 @@ public class SistemaMonedero {
         verificarSaldoBajo(cliente, monedero);
     }
 
+    /**
+     * metodo para realizar retiro
+     * @param cliente
+     * @param monedero
+     * @param monto
+     * @throws Exception
+     */
     public void realizarRetiro(Cliente cliente, Monedero monedero, double monto) throws Exception {
         // Cargo base del 1%
         double cargo = monto * 0.01;
@@ -77,17 +96,15 @@ public class SistemaMonedero {
         verificarSaldoBajo(cliente, monedero);
     }
 
-
-    public void realizarTransferencia(Cliente cliente,
-                                      Monedero origen,
-                                      Monedero destino,
-                                      double monto) throws Exception {
-        Transferencia t = new Transferencia(monto, origen, destino);
-        t.ejecutar();
-        GestorPuntos.aplicarPuntos(cliente, t);
-        verificarSaldoBajo(cliente, origen);
-    }
-
+    /**
+     * metodo para realizar Transferencia
+     * @param clienteOrigen
+     * @param monederoOrigen
+     * @param clienteDestino
+     * @param monederoDestino
+     * @param monto
+     * @throws Exception
+     */
     public void realizarTransferencia(Cliente clienteOrigen,
                                       Monedero monederoOrigen,
                                       Cliente clienteDestino,
@@ -115,6 +132,11 @@ public class SistemaMonedero {
         verificarSaldoBajo(clienteOrigen, monederoOrigen);
     }
 
+    /**
+     * metodo para verificar un saldo bajo
+     * @param cliente
+     * @param monedero
+     */
     private void verificarSaldoBajo(Cliente cliente, Monedero monedero) {
         if (monedero.getSaldo() < 50) {
             notificador.notificar(cliente, "Alerta: saldo bajo en monedero " + monedero.getId());
@@ -122,16 +144,21 @@ public class SistemaMonedero {
     }
 
 
-    // Registrar una nueva transacción programada
+    /**
+     * Registrar una nueva transacción programada
+     * @param t
+     */
     public void programarTransaccion(TransaccionProgramada t) {
         transaccionesProgramadas.add(t);
     }
 
-    // Procesar todas las que ya deberían ejecutarse (hoy o antes)
+    /**
+     * Procesar todas las que ya deberían ejecutarse (hoy o antes)
+     */
     public void procesarTransaccionesProgramadas() {
         LocalDate hoy = LocalDate.now();
 
-        // Ordenar por fecha de ejecución (algoritmo de ordenamiento que pide el profe)
+        // Ordenar por fecha de ejecución
         Collections.sort(transaccionesProgramadas,
                 Comparator.comparing(TransaccionProgramada::getFechaEjecucion));
 

@@ -11,13 +11,22 @@ import com.monedero.model.transaccion.Transferencia;
 import java.time.LocalDate;
 
 public class GestorPuntos {
-
+    /**
+     * metodo para agregar puntos a un cliente
+     * @param cliente
+     * @param t
+     */
     public static void aplicarPuntos(Cliente cliente, Transaccion t) {
         double monto = t.getMonto();
         int puntos = (int) (monto / 10);   // 1 punto cada 10 unidades
         cliente.agregarPuntos(puntos);
     }
 
+    /**
+     * metodo para calcular el rango de un cliente segun sus puntos
+     * @param c
+     * @return
+     */
     public static RangoCliente calcularRango(Cliente c) {
         int p = c.getPuntos();
         if (p >= 1000) return RangoCliente.PLATINO;

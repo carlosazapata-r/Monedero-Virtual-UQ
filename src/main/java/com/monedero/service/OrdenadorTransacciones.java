@@ -8,7 +8,11 @@ import java.util.List;
 
 public class OrdenadorTransacciones {
 
-    // Ordenar historial de un monedero por fecha (más antigua -> más reciente)
+    /**
+     * Ordenar historial de un monedero por fecha (más antigua -> más reciente)
+     * @param monedero
+     * @return
+     */
     public static List<Transaccion> ordenarPorFecha(Monedero monedero) {
         List<Transaccion> copia = new ArrayList<>(monedero.getHistorial());
         quicksort(copia, 0, copia.size() - 1);

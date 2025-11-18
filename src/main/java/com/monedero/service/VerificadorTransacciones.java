@@ -5,7 +5,11 @@ import com.monedero.model.transaccion.Transaccion;
 import java.util.List;
 
 public class VerificadorTransacciones {
-
+    /**
+     * metodo para verificar una lista de transacciones (mayores a 0)
+     * @param lista
+     * @return
+     */
     public static boolean verificarLista(List<Transaccion> lista) {
         return verificarRecursivo(lista, 0);
     }

@@ -55,6 +55,10 @@ public class Cliente {
         return puntos;
     }
 
+    /**
+     * añadir puntos a la cuenta
+     * @param cantidad
+     */
     public void agregarPuntos(int cantidad) {
         this.puntos += cantidad;
         if (this.puntos < 0) {
@@ -62,7 +66,9 @@ public class Cliente {
         }
     }
 
-
+    /**
+     * funcionamiento de descuentoTransferencia
+     */
     public void activarDescuentoTransferencias10() {
         this.descuentoTransferencias10Activo = true;
     }
@@ -75,7 +81,9 @@ public class Cliente {
         this.descuentoTransferencias10Activo = false;
     }
 
-    // ----- Beneficio: 500 pts → retiros sin cargo 1 mes -----
+    /**
+     * metodo para funcionamiento de cargo
+     */
 
     public void activarRetirosSinCargoUnMes() {
         this.retirosSinCargoHasta = LocalDate.now().plusMonths(1);

@@ -10,7 +10,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AnalizadorGastos {
-
+    /**
+     * metodo para calcular el total gastado de un cliente
+     * @param monedero
+     * @return
+     */
     public static double totalGastado(Monedero monedero) {
         return monedero.getHistorial().stream()
                 .filter(t -> t instanceof Retiro || t instanceof Transferencia)
@@ -18,6 +22,11 @@ public class AnalizadorGastos {
                 .sum();
     }
 
+    /**
+     * metodo para calcular el gasto de un cliente en promedio
+     * @param monedero
+     * @return
+     */
     public static double gastoPromedioPorDia(Monedero monedero) {
         Map<LocalDate, Double> gastoPorDia = new HashMap<>();
 

@@ -54,6 +54,11 @@ public class TransaccionProgramada {
         return recurrente;
     }
 
+    /**
+     * metodo para realizar deposito y transferencia
+     * @param sistema
+     * @throws Exception
+     */
     public void ejecutar(SistemaMonedero sistema) throws Exception {
         switch (tipo) {
             case DEPOSITO:
